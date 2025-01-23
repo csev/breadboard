@@ -4,3 +4,4 @@ node_modules/*
 dist/*
 tests/jspec/test-reports/*
 tests/jspec/reports/*
+package-lock.json
