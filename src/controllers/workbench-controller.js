@@ -1,10 +1,10 @@
 /* global sparks*/
 
-const Oscilloscope = require('../models/oscilloscope'),
-  Workbench = require('../models/workbench'),
-  Multimeter = require('../circuit/multimeter'),
-  logController = require('./log-controller'),
-  breadboardController = require('./breadboard-controller');
+import Oscilloscope from '../models/oscilloscope.js';
+import Workbench from '../models/workbench.js';
+import Multimeter from '../circuit/multimeter.js';
+import logController from './log-controller.js';
+import breadboardController from './breadboard-controller.js';
 
 class WorkbenchController {
   constructor() {
@@ -110,5 +110,6 @@ class WorkbenchController {
   }
 }
 
-
-module.exports = new WorkbenchController();
+// Create and export a singleton instance
+const workbenchController = new WorkbenchController();
+export default workbenchController;

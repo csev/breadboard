@@ -1,4 +1,6 @@
-class Meter {
+import EventEmitter from 'eventemitter3';
+
+class Meter extends EventEmitter {
   dmm = null;
   oscope = null;
   setProbeLocation(probe, loc) {
@@ -35,4 +37,4 @@ class Meter {
   }
 }
 
-module.exports = Meter;
+export default Meter;

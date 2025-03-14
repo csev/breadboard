@@ -5,8 +5,8 @@ import 'jquery-ui';
 import 'jquery.event.drag';
 import 'jquery-nearest';
 import 'circuit-solver';
-import * as workbenchController from './controllers/workbench-controller';
-import * as sound from './helpers/sound';
+import * as workbenchController from './controllers/workbench-controller.js';
+import * as sound from './helpers/sound.js';
 
 let scripts = document.getElementsByTagName('script'),
   path = scripts[scripts.length - 1].src.split('?')[0],      // remove any ?query

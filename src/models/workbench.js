@@ -1,8 +1,10 @@
+import EventEmitter from 'eventemitter3';
 const Meter = require('./meter'),
   WorkbenchView = require('../views/workbench-view');
 
-class Workbench {
+class Workbench extends EventEmitter {
   constructor(breadboardController) {
+    super();
     this.circuit = null;
     this.meter = new Meter();
 
@@ -20,4 +22,4 @@ class Workbench {
   }
 }
 
-module.exports = Workbench;
+export default Workbench;

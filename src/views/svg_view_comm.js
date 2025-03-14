@@ -100,4 +100,4 @@ breadboardComm.dmmDialMoved = function(workbenchController, value) {
   });
 };
 
-module.exports = breadboardComm;
+export default breadboardComm;

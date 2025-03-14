@@ -1,4 +1,4 @@
-const ReactiveComponent = require('./reactive-component');
+import ReactiveComponent from './reactive-component.js';
 
 class Capacitor extends ReactiveComponent {
 
@@ -30,6 +30,4 @@ class Capacitor extends ReactiveComponent {
   }
 }
 
-
-
-module.exports = Capacitor;
+export default Capacitor;

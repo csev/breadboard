@@ -1,30 +1,27 @@
-let extend    = require('../helpers/util').extend,
-    Resistor  = require('./resistor');
+import { extend } from '../helpers/util.js';
+import Resistor from './resistor.js';
 
-VariableResistor = function (props, breadboardController) {
-  Resistor.parentConstructor.call(this, props, breadboardController);
-  let superclass = VariableResistor.uber;
-  superclass.init.apply(this, [props.UID]);
-  this.resistance = this.minimumResistance;
-};
+class VariableResistor extends Resistor {
+    constructor(props, breadboardController) {
+        super(props, breadboardController);
+        this.init(props.UID);
+        this.resistance = this.minimumResistance;
+    }
 
-extend(VariableResistor, Resistor, {
+    getMinResistance() {
+        return this.minimumResistance;
+    }
 
-  getMinResistance: function() {
-    return this.minimumResistance;
-  },
+    getMaxResistance() {
+        return this.maximumResistance;
+    }
 
-  getMaxResistance: function() {
-    return this.maximumResistance;
-  },
+    scaleResistance(value) {
+        let perc = value / 10;       // values are 0-10
+        let range = this.maximumResistance - this.minimumResistance;
+        let newValue = this.minimumResistance + (range * perc);
+        this.resistance = newValue;
+    }
+}
 
-  scaleResistance: function(value) {
-    let perc = value / 10,       // values are 0-10
-        range = this.maximumResistance - this.minimumResistance,
-        newValue = this.minimumResistance + (range * perc);
-    this.resistance = newValue;
-  }
-
-});
-
-module.exports = VariableResistor;
+export default VariableResistor;

@@ -1,18 +1,19 @@
 /*globals $ CiSo*/
 
-const util = require('../helpers/util'),
-  Breadboard = require('../circuit/breadboard'),
-  Battery = require('../circuit/battery'),
-  Capacitor = require('../circuit/capacitor'),
-  FunctionGenerator = require('../circuit/function-generator'),
-  Inductor = require('../circuit/inductor'),
-  PowerLead = require('../circuit/power-lead'),
-  Resistor4band = require('../circuit/resistor-4band'),
-  Resistor = require('../circuit/resistor'),
-  VariableResistor = require('../circuit/variable-resistor'),
-  Component = require('../circuit/component'),
-  Wire = require('../circuit/wire'),
-  componentTypes = {
+import util from '../helpers/util.js';
+import Breadboard from '../circuit/breadboard.js';
+import Battery from '../circuit/battery.js';
+import Capacitor from '../circuit/capacitor.js';
+import FunctionGenerator from '../circuit/function-generator.js';
+import Inductor from '../circuit/inductor.js';
+import PowerLead from '../circuit/power-lead.js';
+import Resistor4band from '../circuit/resistor-4band.js';
+import Resistor from '../circuit/resistor.js';
+import VariableResistor from '../circuit/variable-resistor.js';
+import Component from '../circuit/component.js';
+import Wire from '../circuit/wire.js';
+
+const componentTypes = {
     "resistor": Resistor,
     "variable resistor": VariableResistor,
     "inductor": Inductor,
@@ -21,11 +22,10 @@ const util = require('../helpers/util'),
     "function generator": FunctionGenerator,
     "wire": Wire,
     "powerLead": PowerLead
-  };
+};
+
 let workbenchController,
   breadboardController;
-
-
 
 class BreadboardController {
   constructor() {
@@ -500,4 +500,4 @@ class BreadboardController {
 //// BreadBoard Instance & Interface /////////////////////////////////////////
 breadboardController = new BreadboardController();
 
-module.exports = breadboardController;
+export default breadboardController;

@@ -1,9 +1,8 @@
-require('../../lib/apMessageBox');
-
-const LogEvent = require('../models/log'),
-  util = require('../helpers/util'),
-  logController = require('../controllers/log-controller'),
-  MultimeterBase = require('./multimeter-base');
+import '../../lib/apMessageBox.js';
+import LogEvent from '../models/log.js';
+import util from '../helpers/util.js';
+import logController from '../controllers/log-controller.js';
+import MultimeterBase from './multimeter-base.js';
 
 /*
  * Digital Multimeter for breadboard activities
@@ -163,4 +162,4 @@ class Multimeter extends MultimeterBase {
   }
 }
 
-module.exports = Multimeter;
+export default Multimeter;

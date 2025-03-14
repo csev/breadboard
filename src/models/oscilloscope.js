@@ -1,7 +1,8 @@
+import EventEmitter from 'eventemitter3';
 let LogEvent = require('./log'),
   logController = require('../controllers/log-controller');
 
-class Oscilloscope {
+class Oscilloscope extends EventEmitter {
   N_CHANNELS = 2;
   PROBE_CHANNEL = [1, 2];
 
@@ -12,6 +13,7 @@ class Oscilloscope {
   INITIAL_VERTICAL_SCALE = 5;
 
   constructor(breadboardController) {
+    super();
     this.breadboardController = breadboardController;
     this.probeLocation = [];
     this.probeLocation[0] = null;     // pink probe
@@ -301,4 +303,4 @@ class Oscilloscope {
   }
 }
 
-module.exports = Oscilloscope;
+export default Oscilloscope;

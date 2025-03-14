@@ -1,8 +1,8 @@
 //extend                = require('../helpers/util').extend,
-const Component = require('./component'),
-  r_values = require('./r-values'),
-  Resistor4band = require('./resistor-4band'),
-  workbenchController = require('../controllers/workbench-controller');
+import Component from './component.js';
+import r_values from './r-values.js';
+import Resistor4band from './resistor-4band.js';
+import workbenchController from '../controllers/workbench-controller.js';
 
 class Resistor extends Component {
   constructor(props, breadboardController) {
@@ -262,4 +262,4 @@ class Resistor extends Component {
   }
 }
 
-module.exports = Resistor;
+export default Resistor;

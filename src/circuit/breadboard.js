@@ -1,6 +1,7 @@
-//= require circuit/resistor
-//= require circuit/variable-resistor
-//= require circuit/component
+// Convert requires to imports (these were commented out but might be needed)
+import './resistor.js';
+import './variable-resistor.js';
+import './component.js';
 
 ////////////////////////////////////////////////////////////////////////////////
 //// B R E A D - B O A R D - M O D E L /////////////////////////////////////////
@@ -10,11 +11,11 @@
 
 /* FILE breadboard.js */
 
-const rows = 31,
-  powerRailHoles = 25;
+// Constants
+const rows = 31;
+const powerRailHoles = 25;
 
-
-
+// Helper classes
 class Hole {
   constructor(strip, name) {
     this.type = 'hole';
@@ -43,7 +44,6 @@ class GhostHole {
     return this.name;
   }
 }
-
 
 class Strip {
   constructor(holes, name) {
@@ -116,4 +116,5 @@ class Breadboard {
   }
 }
 
-module.exports = Breadboard;
+// Convert module.exports to export default
+export default Breadboard;

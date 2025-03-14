@@ -1,4 +1,6 @@
-class LogEvent {
+import EventEmitter from 'eventemitter3';
+
+class Log extends EventEmitter {
   CLICKED_TUTORIAL = "Clicked tutorial";
   CHANGED_TUTORIAL = "Changed tutorial";
   BLEW_FUSE = "Blew fuse";
@@ -19,4 +21,4 @@ class LogEvent {
   }
 }
 
-module.exports = LogEvent;
+export default Log;

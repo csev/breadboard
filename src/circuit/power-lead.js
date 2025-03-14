@@ -1,4 +1,4 @@
-const Component = require('./component');
+import Component from './component.js';
 
 class PowerLead extends Component {
   constructor(props, breadboardController) {
@@ -24,4 +24,4 @@ class PowerLead extends Component {
   getViewArguments = null;
 }
 
-module.exports = PowerLead;
+export default PowerLead;

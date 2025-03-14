@@ -1,6 +1,8 @@
 //= require helpers/string
 /* FILE math.js */
 
+import util from './util.js';
+
 let str = {};
 
 str.strip = function (s) {
@@ -129,5 +131,5 @@ math.roundToSigDigits = function(x, n) {
      return Math.min.apply( Math, array );
  };
 
- module.exports = math;
+export default math;
 

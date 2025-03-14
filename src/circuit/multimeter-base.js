@@ -1,4 +1,4 @@
-const workbenchController = require('../controllers/workbench-controller');
+import workbenchController from '../controllers/workbench-controller.js';
 /*
  * Digital Multimeter
  * Base for the Centech DMM
@@ -503,5 +503,4 @@ class MultimeterBase {
     }
 }
 
-
-module.exports = MultimeterBase;
+export default MultimeterBase;

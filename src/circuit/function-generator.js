@@ -1,6 +1,6 @@
-const Component = require('./component'),
-  LogEvent = require('../models/log'),
-  logController = require('../controllers/log-controller');
+import Component from './component.js';
+import LogEvent from '../models/log.js';
+import logController from '../controllers/log-controller.js';
 
 class FunctionGenerator extends Component {
 
@@ -137,4 +137,4 @@ class FunctionGenerator extends Component {
 
 }
 
-module.exports = FunctionGenerator;
+export default FunctionGenerator;

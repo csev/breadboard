@@ -1,5 +1,5 @@
-const Component = require('./component'),
-  sparksMath = require('../helpers/sparks-math');
+import Component from './component.js';
+import sparksMath from '../helpers/sparks-math.js';
 
 class ReactiveComponent extends Component {
   constructor(props, breadboardController) {
@@ -62,4 +62,4 @@ class ReactiveComponent extends Component {
   }
 }
 
-module.exports = ReactiveComponent;
+export default ReactiveComponent;

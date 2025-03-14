@@ -1,4 +1,4 @@
-const Component = require('./component');
+import Component from './component.js';
 
 class Wire extends Component {
   constructor(props, breadboardController) {
@@ -24,4 +24,4 @@ class Wire extends Component {
   }
 }
 
-module.exports = Wire;
+export default Wire;

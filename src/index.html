@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breadboard</title>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <style>
+        /* Add some basic styling for testing */
+        .editor {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+        }
+        .speech-bubble {
+            position: absolute;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Test component -->
+        <div id="test-component" style="margin: 20px;">
+            <h2>Test Component</h2>
+            <button onclick="testRightClick()">Simulate Right Click</button>
+        </div>
+
+        <!-- Container for the editor -->
+        <div id="editor-container"></div>
+
+        <!-- Add this inside the #app div -->
+        <div id="test-controls" style="margin: 20px;">
+            <h3>Test Controls</h3>
+            <button onclick="testSelectEditor()">Test Select Editor</button>
+            <button onclick="testSliderEditor()">Test Slider Editor</button>
+            <button onclick="testRemoveComponent()">Test Remove</button>
+        </div>
+    </div>
+
+    <!-- jQuery and jQuery UI -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    
+    <!-- Test initialization script -->
+    <script type="module">
+        import { EditComponentsView } from './views/edit-components-view.js';
+
+        // Mock controllers for testing
+        const mockWorkbenchController = {
+            breadboardView: {
+                setRightClickFunction: (context, methodName) => {
+                    window.testRightClick = () => context[methodName]('test-component-1');
+                },
+                useSelectInPropertyEditor: false,
+                showTooltip: (uid, element) => {
+                    const container = document.getElementById('editor-container');
+                    container.innerHTML = '';
+                    container.appendChild(element);
+                }
+            },
+            workbench: {
+                showComponentDrawer: true,
+                meter: {
+                    update: () => console.log('Meter updated')
+                }
+            }
+        };
+
+        const mockBreadboardController = {
+            getComponents: () => ({
+                'test-component-1': {
+                    UID: 'test-component-1',
+                    componentTypeName: 'Resistor',
+                    isEditable: true,
+                    editableProperty: {
+                        name: 'resistance',
+                        units: 'Ω'
+                    },
+                    resistance: 100,
+                    getEditablePropertyValues: () => [50, 100, 150, 200, 250],
+                    changeEditableValue: (value) => console.log('Value changed to:', value)
+                }
+            }),
+            removeComponent: (comp) => console.log('Removing component:', comp.UID)
+        };
+
+        // Initialize the view
+        window.editComponentsView = new EditComponentsView(
+            mockWorkbenchController,
+            mockBreadboardController
+        );
+
+        // Log that initialization is complete
+        console.log('EditComponentsView initialized');
+
+        // Test helper functions
+        window.testSelectEditor = () => {
+            mockWorkbenchController.breadboardView.useSelectInPropertyEditor = true;
+            testRightClick();
+        };
+
+        window.testSliderEditor = () => {
+            mockWorkbenchController.breadboardView.useSelectInPropertyEditor = false;
+            testRightClick();
+        };
+
+        window.testRemoveComponent = () => {
+            testRightClick();
+            setTimeout(() => {
+                document.querySelector('button').click();
+            }, 100);
+        };
+    </script>
+</body>
+</html> 

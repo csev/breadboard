@@ -1,4 +1,5 @@
-let sound = {
+// Export sound-related functionality
+const sound = {
   mute: false
 };
 
@@ -9,4 +10,4 @@ sound.playSound = function (s) {
   }
 }
 
-module.exports = sound;
+export default sound;

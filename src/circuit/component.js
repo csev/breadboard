@@ -1,4 +1,5 @@
-class Component {
+// Since this is a base class, we'll export it as default
+export default class Component {
   // used by the component edit view
   componentTypeName = "Component";
   // used by the component edit view
@@ -201,6 +202,4 @@ class Component {
     return jsonComp;
   }
 }
-
-module.exports = Component;
 

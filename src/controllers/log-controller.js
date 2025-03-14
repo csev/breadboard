@@ -1,7 +1,7 @@
 /*globals $*/
 
-const LogEvent = require('../models/log'),
-  util = require('../helpers/util');
+import LogEvent from '../models/log.js';
+import util from '../helpers/util.js';
 
 class Log {
   constructor(startTime) {
@@ -77,6 +77,6 @@ class LogController {
   }
 }
 
-let logController = new LogController();
-
-module.exports = logController;
+// Create and export a singleton instance
+const logController = new LogController();
+export default logController;

@@ -1,4 +1,4 @@
-const ReactiveComponent = require('./reactive-component');
+import ReactiveComponent from './reactive-component.js';
 
 class Inductor extends ReactiveComponent {
   componentTypeName = "Inductor";
@@ -29,5 +29,4 @@ class Inductor extends ReactiveComponent {
   }
 }
 
-
-module.exports = Inductor;
+export default Inductor;

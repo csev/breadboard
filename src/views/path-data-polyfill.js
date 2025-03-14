@@ -1,4 +1,3 @@
-
 // @info
 //   Polyfill for SVG getPathData() and setPathData() methods. Based on:
 //   - SVGPathSeg polyfill by Philip Rogers (MIT License)
@@ -1161,3 +1160,13 @@ if (!SVGPathElement.prototype.getPathData || !SVGPathElement.prototype.setPathDa
     };
   })();
 }
+
+// If this is a polyfill that modifies global objects, wrap it in a function
+export function initPathDataPolyfill() {
+    // ... existing polyfill code ...
+}
+
+// Or if it's meant to be used as a module
+export default {
+    // ... polyfill implementation ...
+};

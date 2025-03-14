@@ -1,19 +1,22 @@
 /*globals sparks Raphael*/
 
+import { EventEmitter } from 'eventemitter3';
+import * as d3 from 'd3';
+
 var mathParser  = require('../helpers/math-parser'),
     unit        = require('../helpers/unit'),
     util        = require('../helpers/util');
 
-FunctionGeneratorView = function (functionGenerator) {
-  this.$view          = null;
-  this.model          = functionGenerator;
-  this.frequencies    = [];
-  this.currentFreqString = "";
-  this.freqValueViews = [];
-  this.popup = null;
-};
-
-FunctionGeneratorView.prototype = {
+class FunctionGeneratorView extends EventEmitter {
+  constructor(container, model) {
+    super();
+    this.$view          = null;
+    this.model          = model;
+    this.frequencies    = [];
+    this.currentFreqString = "";
+    this.freqValueViews = [];
+    this.popup = null;
+  }
 
   width:    200,
   height:   100,
@@ -187,6 +190,6 @@ FunctionGeneratorView.prototype = {
       right: 10
     }).slider({ max: steps, slide: callback, value: value }).appendTo($el);
   }
-};
+}
 
-module.exports = FunctionGeneratorView;
+export default FunctionGeneratorView;

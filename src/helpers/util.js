@@ -197,7 +197,21 @@ util.extend = function (Child, Parent, properties) {
     Child.uber = Parent.prototype;
 };
 
-module.exports = util;
+// Export utility functions either individually
+export function extend(/* params */) {
+    // ...
+}
+
+export function contains(/* params */) {
+    // ...
+}
+
+// Or as a default object
+export default {
+    extend,
+    contains,
+    // ... other utility functions
+};
 
 
 // // Shim to add ECMA262-5 Array methods if not supported natively

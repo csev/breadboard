@@ -1,3 +1,6 @@
+import { EventEmitter } from 'eventemitter3';
+import * as d3 from 'd3';
+
 require('./breadboard-svg-view');
 
 var AddComponentsView     = require('./add-components-view'),
@@ -7,14 +10,15 @@ var AddComponentsView     = require('./add-components-view'),
     sound                 = require('../helpers/sound'),
     workbenchController;
 
-WorkbenchView = function(workbench, breadboardController){
-  workbenchController   = require('../controllers/workbench-controller');     // grrr
-  this.breadboardController = breadboardController;
-  this.workbench = workbench;
-};
+class WorkbenchView extends EventEmitter {
+  constructor(workbench, breadboardController) {
+    super();
+    workbenchController   = require('../controllers/workbench-controller');     // grrr
+    this.breadboardController = breadboardController;
+    this.workbench = workbench;
+  }
 
-WorkbenchView.prototype = {
-  layout: function(elId) {
+  layout(elId) {
     this.container = document.getElementById(elId);
 
     if (!this.container) {
@@ -89,9 +93,9 @@ WorkbenchView.prototype = {
         button.on('click', addComponentsView.openPane);
       }
     }
-  },
+  }
 
-  showOScope: function(visible) {
+  showOScope(visible) {
     this.divs.scope.html('');
 
     if (visible) {
@@ -111,9 +115,9 @@ WorkbenchView.prototype = {
         }
       });
     }
-  },
+  }
 
-  showDMM: function(visible) {
+  showDMM(visible) {
     if (visible) {
       workbenchController.breadboardView.addDMM({
           "dial": "dcv_20",
@@ -126,30 +130,30 @@ WorkbenchView.prototype = {
         }
       });
     }
-  },
+  }
 
-  allowMoveYellowProbe: function() {
-  },
+  allowMoveYellowProbe() {
+  }
 
-  hidePinkProbe: function() {
-  },
+  hidePinkProbe() {
+  }
 
-  setRightClickFunction: function(obj, func) {
+  setRightClickFunction(obj, func) {
     this.rightClickObj = obj;
     this.rightClickFunction = func;
-  },
+  }
 
-  getOrCreateDiv: function(clazz, hide) {
+  getOrCreateDiv(clazz, hide) {
     $el = $(this.container).find('.'+clazz);
     if (!$el.length)
       $el = $('<div class="'+clazz+'"></div>').appendTo(this.container);
     if (hide) $el.hide();
     return $el;
-  },
+  }
 
-  showComponentEditor: function(id) {
+  showComponentEditor(id) {
     this.editComponentsView.showEditor(id);
   }
 }
 
-module.exports = WorkbenchView;
+export default WorkbenchView;

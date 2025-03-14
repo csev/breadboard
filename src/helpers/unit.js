@@ -1,3 +1,5 @@
+import util from './util.js';
+
 let unit = {};
 
 let u = unit;
@@ -266,5 +268,17 @@ u.parse = function (string) {
   return { val: value, units: units }
 };
 
-module.exports = unit;
+export function convertUnit(/* params */) {
+    // ... implementation
+}
+
+export function otherFunction() {
+    // ...
+}
+
+export default {
+    convertUnit,
+    otherFunction,
+    // ... other functions
+};
 

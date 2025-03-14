@@ -1,17 +1,263 @@
+import { EventEmitter } from 'eventemitter3';
+import * as d3 from 'd3';
 require('../../bower_components/raphael/raphael-min');
 var sparksMath = require('../helpers/sparks-math');
 
-OscilloscopeView = function () {
-  this.$view         = null;
-  this.miniRaphaelCanvas = null;
-  this.raphaelCanvas = null;
-  this.miniTraces    = [];
-  this.traces        = [];
-  this.model         = null;
-  this.popup         = null;
-};
+class OscilloscopeView extends EventEmitter {
+  constructor(container, model) {
+    super();
+    this.container = container;
+    this.model = model;
+    this.width = 800;
+    this.height = 600;
+    this.margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    this.plotWidth = this.width - this.margin.left - this.margin.right;
+    this.plotHeight = this.height - this.margin.top - this.margin.bottom;
 
-OscilloscopeView.prototype = {
+    this.setupSvg();
+    this.setupScales();
+    this.setupAxes();
+    this.setupGrid();
+    this.setupPlots();
+    this.setupControls();
+    this.setupMeasurements();
+
+    this.model.on('change', () => this.update());
+    this.update();
+  }
+
+  setupSvg() {
+    this.svg = d3.select(this.container)
+      .append('svg')
+      .attr('width', this.width)
+      .attr('height', this.height);
+
+    this.plot = this.svg.append('g')
+      .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
+  }
+
+  setupScales() {
+    this.xScale = d3.scaleLinear()
+      .domain([0, 10 * this.model.timePerDiv])
+      .range([0, this.plotWidth]);
+
+    this.yScale = d3.scaleLinear()
+      .domain([-4 * this.model.voltsPerDiv, 4 * this.model.voltsPerDiv])
+      .range([this.plotHeight, 0]);
+  }
+
+  setupAxes() {
+    this.xAxis = d3.axisBottom(this.xScale)
+      .tickFormat(d => `${d}ms`);
+    this.yAxis = d3.axisLeft(this.yScale)
+      .tickFormat(d => `${d}V`);
+
+    this.plot.append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(0,${this.plotHeight})`)
+      .call(this.xAxis);
+
+    this.plot.append('g')
+      .attr('class', 'y-axis')
+      .call(this.yAxis);
+  }
+
+  setupGrid() {
+    // Vertical grid lines
+    this.plot.append('g')
+      .attr('class', 'grid vertical')
+      .selectAll('line')
+      .data(d3.range(11))
+      .enter()
+      .append('line')
+      .attr('x1', d => d * this.plotWidth / 10)
+      .attr('x2', d => d * this.plotWidth / 10)
+      .attr('y1', 0)
+      .attr('y2', this.plotHeight)
+      .style('stroke', '#ddd')
+      .style('stroke-width', d => d % 5 === 0 ? 2 : 1);
+
+    // Horizontal grid lines
+    this.plot.append('g')
+      .attr('class', 'grid horizontal')
+      .selectAll('line')
+      .data(d3.range(9))
+      .enter()
+      .append('line')
+      .attr('x1', 0)
+      .attr('x2', this.plotWidth)
+      .attr('y1', d => d * this.plotHeight / 8)
+      .attr('y2', d => d * this.plotHeight / 8)
+      .style('stroke', '#ddd')
+      .style('stroke-width', d => d % 4 === 0 ? 2 : 1);
+  }
+
+  setupPlots() {
+    this.ch1Line = d3.line()
+      .x((d, i) => this.xScale(i * this.model.timePerDiv / 100))
+      .y(d => this.yScale(d));
+
+    this.ch2Line = d3.line()
+      .x((d, i) => this.xScale(i * this.model.timePerDiv / 100))
+      .y(d => this.yScale(d));
+
+    this.plot.append('path')
+      .attr('class', 'ch1-line')
+      .style('stroke', 'yellow')
+      .style('stroke-width', 2)
+      .style('fill', 'none');
+
+    this.plot.append('path')
+      .attr('class', 'ch2-line')
+      .style('stroke', 'cyan')
+      .style('stroke-width', 2)
+      .style('fill', 'none');
+
+    // Trigger level line
+    this.triggerLine = this.plot.append('line')
+      .attr('class', 'trigger-line')
+      .style('stroke', 'red')
+      .style('stroke-width', 2)
+      .style('stroke-dasharray', '5,5');
+  }
+
+  setupControls() {
+    const controls = d3.select(this.container)
+      .append('div')
+      .attr('class', 'oscilloscope-controls');
+
+    // Time per division control
+    const timeControl = controls.append('div');
+    timeControl.append('label')
+      .text('Time/div: ');
+    timeControl.append('select')
+      .on('change', (event) => {
+        this.model.setTimePerDiv(parseFloat(event.target.value));
+      })
+      .selectAll('option')
+      .data([0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100])
+      .enter()
+      .append('option')
+      .attr('value', d => d)
+      .text(d => `${d} ms`);
+
+    // Volts per division controls
+    ['ch1', 'ch2'].forEach(channel => {
+      const voltControl = controls.append('div');
+      voltControl.append('label')
+        .text(`${channel.toUpperCase()} V/div: `);
+      voltControl.append('select')
+        .on('change', (event) => {
+          this.model.setVoltsPerDiv(channel, parseFloat(event.target.value));
+        })
+        .selectAll('option')
+        .data([0.1, 0.2, 0.5, 1, 2, 5, 10])
+        .enter()
+        .append('option')
+        .attr('value', d => d)
+        .text(d => `${d} V`);
+    });
+
+    // Trigger controls
+    const triggerControl = controls.append('div');
+    triggerControl.append('label')
+      .text('Trigger: ');
+    
+    // Trigger level
+    triggerControl.append('input')
+      .attr('type', 'range')
+      .attr('min', -4)
+      .attr('max', 4)
+      .attr('step', 0.1)
+      .attr('value', this.model.triggerLevel)
+      .on('input', (event) => {
+        this.model.setTriggerLevel(parseFloat(event.target.value));
+      });
+
+    // Trigger mode
+    triggerControl.append('select')
+      .on('change', (event) => {
+        this.model.setTriggerMode(event.target.value);
+      })
+      .selectAll('option')
+      .data(['auto', 'normal', 'single'])
+      .enter()
+      .append('option')
+      .attr('value', d => d)
+      .text(d => d);
+
+    // Trigger slope
+    triggerControl.append('select')
+      .on('change', (event) => {
+        this.model.setTriggerSlope(event.target.value);
+      })
+      .selectAll('option')
+      .data(['rising', 'falling'])
+      .enter()
+      .append('option')
+      .attr('value', d => d)
+      .text(d => d);
+
+    // Trigger source
+    triggerControl.append('select')
+      .on('change', (event) => {
+        this.model.setTriggerSource(event.target.value);
+      })
+      .selectAll('option')
+      .data(['ch1', 'ch2'])
+      .enter()
+      .append('option')
+      .attr('value', d => d)
+      .text(d => d.toUpperCase());
+
+    // Run/Stop button
+    controls.append('button')
+      .text(() => this.model.running ? 'Stop' : 'Run')
+      .on('click', () => {
+        if (this.model.running) {
+          this.model.stop();
+        } else {
+          this.model.start();
+        }
+      });
+  }
+
+  setupMeasurements() {
+    this.measurements = d3.select(this.container)
+      .append('div')
+      .attr('class', 'measurements');
+
+    ['ch1', 'ch2'].forEach(channel => {
+      const channelMeasurements = this.measurements
+        .append('div')
+        .attr('class', `${channel}-measurements`);
+
+      channelMeasurements.append('h3')
+        .text(channel.toUpperCase());
+
+      const table = channelMeasurements.append('table');
+      
+      const measurements = [
+        { label: 'Frequency', key: 'frequency', unit: 'Hz' },
+        { label: 'Period', key: 'period', unit: 's' },
+        { label: 'Amplitude', key: 'amplitude', unit: 'V' },
+        { label: 'Mean', key: 'mean', unit: 'V' },
+        { label: 'RMS', key: 'rms', unit: 'V' },
+        { label: 'Min', key: 'min', unit: 'V' },
+        { label: 'Max', key: 'max', unit: 'V' },
+        { label: 'Duty Cycle', key: 'dutyCycle', unit: '%' }
+      ];
+
+      measurements.forEach(measurement => {
+        const row = table.append('tr');
+        row.append('td').text(measurement.label);
+        row.append('td')
+          .attr('class', `${measurement.key}-value`)
+          .text('0');
+        row.append('td').text(measurement.unit);
+      });
+    });
+  }
 
   // Note that sizing and placement of the various elements of the view are handled ad-hoc in the getView() method;
   // however, this.width and this.height indicate the dimensions of the gridded area where traces are drawn.
@@ -610,8 +856,7 @@ _toggleComboButton: function (isAminusB) {
 
     return raphaelObject;
   }
+}
 
-};
-
-module.exports = OscilloscopeView;
+export default OscilloscopeView;
 
