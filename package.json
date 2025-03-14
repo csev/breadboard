@@ -2,31 +2,21 @@
   "name": "breadboard",
   "version": "0.0.11",
   "description": "Javascript breadboard circuit simulator",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:concord-consortium/breadboard.git"
-  },
   "scripts": {
-    "prestart": "./node_modules/gulp/bin/gulp.js",
-    "start": "",
-    "predeploy": "rm -rf dist && ./node_modules/gulp/bin/gulp.js build-gh-pages",
+    "dev": "vite",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "predeploy": "rm -rf dist && vite build",
     "deploy": "./deploy.sh gh-pages",
-    "prerelease": "rm -rf dist && ./node_modules/gulp/bin/gulp.js build-production",
+    "prerelease": "rm -rf dist && vite build",
     "release": "./deploy.sh production"
   },
   "devDependencies": {
     "@eslint/js": "^9.4.0",
-    "browserify": "^17.0.0",
-    "combine-css": "^0.0.2",
     "eslint": "^9.4.0",
     "globals": "^15.3.0",
-    "gulp": "^5.0.0",
-    "gulp-concat": "^2.4.3",
-    "gulp-clean-css": "^4.3.0",
-    "gulp-rename": "^1.2.0",
-    "gulp-terser": "^2.1.0",
-    "require-dir": "^0.3.2",
-    "terser": "^5.31.0",
-    "through2": "^2.0.3"
+    "vite": "^5.0.0",
+    "vite-plugin-legacy": "^2.0.0"
   }
 }

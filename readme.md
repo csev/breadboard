@@ -14,13 +14,11 @@ Breadboard was built by [The Concord Consortium](http://concord.org/) for the
 ### Dependencies
 
 * [Node](http://nodejs.org/) `brew install node`
-* [Bower](http://bower.io/) `npm install -g bower`
 
-We use npm to install the developer tools, and bower to manage the javascript libraries:
+We use npm to install the developer tools and manage dependencies:
 
 ```
   npm install
-  bower install
 ```
 
 ### Building the library

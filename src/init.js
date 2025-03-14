@@ -1,15 +1,14 @@
 /*globals $*/
 
-require('../bower_components/jquery/jquery');
-require('../lib/jquery/jquery-ui-1.8.24.custom.min');
-require('../lib/jquery/plugins/jquery.event.drag-2.0.min');
-require('../bower_components/jquery-nearest/src/jquery.nearest.min');
-require('../bower_components/circuit-solver/dist/circuitSolver');
+import jQuery from 'jquery';
+import 'jquery-ui';
+import 'jquery.event.drag';
+import 'jquery-nearest';
+import 'circuit-solver';
+import * as workbenchController from './controllers/workbench-controller';
+import * as sound from './helpers/sound';
 
-let workbenchController = require('./controllers/workbench-controller'),
-  sound = require('./helpers/sound'),
-
-  scripts = document.getElementsByTagName('script'),
+let scripts = document.getElementsByTagName('script'),
   path = scripts[scripts.length - 1].src.split('?')[0],      // remove any ?query
   packageRoot = path.split('/').slice(0, -2).join('/') + '/',
 
@@ -27,11 +26,9 @@ function loadSounds() {
   }
 };
 
-$(function () {
+jQuery(() => {
   loadSounds();
 });
-
-
 
 function createWorkbench(props, elId) {
   workbenchController.createWorkbench(props, elId);
@@ -43,8 +40,7 @@ function createWorkbench(props, elId) {
 
 // sparks.packageRoot = packageRoot;
 
-
-module.exports = {
+export {
   createWorkbench,
   workbenchController,
   logController: workbenchController.logController,
